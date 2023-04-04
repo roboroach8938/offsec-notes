@@ -766,6 +766,10 @@ Poewrful data mining tool that searches many online data sources to "transform" 
 https://www.paterva.com/buy/maltego-clients.php
 
 ## Active Information Gathering
+
+### AutoRecon
+https://github.com/Tib3rius/AutoRecon
+
 ### DNS Enumeration
 - NS - Nameserver records contain the name of the authoritative servers hosting the DNS records for a domain.
 - A - Also known as a host record, the "a record" contains the IP address of a hostname (such as www.megacorpone.com).
@@ -2011,6 +2015,7 @@ Refer to PDF.
 ### Information Gathering
 #### Manual Enumeration
 ****Windows****
+https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS
 - `systeminfo` to gather basic information about the system
 - `whoami` displays the username the shell is running as (`whoami /priv` to check the current user's permissions)
 - We can pass the discovered username as an argument to `net user` (e.g. `net user student`)
@@ -2056,6 +2061,7 @@ reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer
 If this setting is enabled, we could craft an MSI file and run it to elevate our privileges.
 
 **Linux**
+https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
 - Use `id` to gather user context information (e.g. what groups they are a part of)
 - `cat /etc/passwd` to enumerate users
     - `www-data` indicates a web server is likely installed
