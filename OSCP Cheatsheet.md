@@ -1370,6 +1370,8 @@ Use `' or 1=1;#` together with the username, i.e. `tom' or 1=1;#`. This comments
     
 Can try `' or 1=1 --`.
 
+Can also put a random username and directly inject in the password box, e.g. `' UNION SELECT NULL--'
+
 3. **Enumeration Database**
 As usual, use the `'` to the value of the `id` parameter. If an error appears, the database is vulnerable:
 ```
@@ -1487,6 +1489,11 @@ Output should be hashes
 	- Add in `$currentLocation`
 - Crack the `sa` hash with `john`, and login with `sa` being the username
 - Run `xp_cmdshell` to perform RCE as admin in MSSQL database (https://rioasmara.com/2020/01/31/mssql-rce-and-reverse-shell-xp_cmdshell/)
+
+Can also check if current user has `sysadmin`, and stacked queries, and run `xp_cmdshell` to perform RCE from there:
+https://medium.com/@notsoshant/a-not-so-blind-rce-with-sql-injection-13838026331e
+https://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet
+- Remember to enable `xp_cmdshell` before executing
 
 MySQL
 https://book.hacktricks.xyz/network-services-pentesting/pentesting-mysql
