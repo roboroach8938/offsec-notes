@@ -944,6 +944,9 @@ smbclient -L <IP>
 ```
 https://bestestredteam.com/2019/03/15/using-smbclient-to-enumerate-shares/
 
+Symlink Directory Traversal:
+https://github.com/MarkBuffalo/exploits/blob/master/Samba/CVE-2010-0926.c
+
 Use `wireshark` to capture packets after executing `smbclient`, and follow `TCP` stream. 
 
 Try anonymous credentials as well in case they allow for anonymous logins. You may try `smbmap` if `smbclient` does not work:
