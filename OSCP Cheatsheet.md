@@ -2757,6 +2757,10 @@ https://raw.githubusercontent.com/Blevene/Random-Python-Scripts/master/shellshoc
 
 Potatoes:
 See Privilege Escalation
+	
+JS Deobfuscator
+https://lelinhtinh.github.io/de4js/
+https://deobfuscate.io/
 
 ### Additional References
 Web Application Attack on ALPHA https://usermanual.wiki/Document/Offensive20Securitys20Complete20Guide20to20Alpha.546296816/view
