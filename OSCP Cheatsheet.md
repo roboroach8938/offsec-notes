@@ -2547,7 +2547,9 @@ impacket-psexec sqlserver:<password>@<IP>
 impacket-psexec -hashes <lmhash/MsCachev2>:<NTLM> <user>@10.11.1.122
 ```
 `MsCachev2` can be obtained by executing `lsadump::cache` in `mimikatz`.
-	
+
+Can also try `evil-winrm` and `crackmapexec`.
+
 ### AD Lateral Movement
 #### Pass The Hash
 Only for NTLM authentication.
