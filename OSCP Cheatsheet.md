@@ -2130,9 +2130,11 @@ Windows: `windows-privesc-check2.exe --dump`
 Linux: `./unix-privesc-check standard > output.txt`
 
 ### Windows Privilege Escalation
-- UAC bypass by editing registry
+- UAC bypass by editing registry: Check for permissions first `whoami /priv`.
     - `fodhelper.exe` can possibly be found in `C:\Windows\sysnative`
-- Exploit isecure file permissions on services that run as `nt authority\system`
+    - https://github.com/k4sth4/UAC-bypass (`eventvwr.exe`)
+    - `Get-WmiObject win32_service | Select-Object Name, State, PathName | Where-Object {$_.State -like 'Running'}`
+- Exploit insecure file permissions on services that run as `nt authority\system`
 - Unquoted service paths
 - Kernel Vulnerabilities
 - Refer to PDF
