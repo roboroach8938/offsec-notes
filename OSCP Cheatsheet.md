@@ -2033,6 +2033,7 @@ Refer to PDF.
 #### Manual Enumeration
 ****Windows****
 https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS
+https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
 - `systeminfo` to gather basic information about the system
 - `whoami` displays the username the shell is running as (`whoami /priv` to check the current user's permissions)
 - We can pass the discovered username as an argument to `net user` (e.g. `net user student`)
@@ -2080,6 +2081,7 @@ If this setting is enabled, we could craft an MSI file and run it to elevate our
 **Linux**
 https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/privilege-escalation/linux/linux-examples.rst
 https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
+https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
 - Use `id` to gather user context information (e.g. what groups they are a part of)
 - `cat /etc/passwd` to enumerate users
     - `www-data` indicates a web server is likely installed
