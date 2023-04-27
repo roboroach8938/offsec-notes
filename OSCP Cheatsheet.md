@@ -2814,6 +2814,10 @@ Login with `ssh -i <public key (without .pub extension)> -oKexAlgorithms=+diffie
 `authorized_keys` resides on the server, and authenticates with the user's public key to authenticate the user
 `known_hosts` resides on the client, and authenticates with the server's private key to authenticate the server
 https://security.stackexchange.com/questions/20706/what-is-the-difference-between-authorized-keys-and-known-hosts-file-for-ssh	
+	
+----
+Reverse Shell Cheat Sheet
+https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
 
 ### Scripts
 Shellshock
