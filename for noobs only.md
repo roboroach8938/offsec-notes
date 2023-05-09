@@ -1,4 +1,4 @@
-﻿# OSCP Notes
+﻿# for hacking noobs only
 Additional references:
 https://oscp.infosecsanyam.in/
 https://sushant747.gitbooks.io/total-oscp-guide/content
