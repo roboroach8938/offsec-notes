@@ -1,4 +1,4 @@
-﻿# for hacking noobs only
+﻿# for hacking noobs only!!
 Additional references:
 https://oscp.infosecsanyam.in/
 https://sushant747.gitbooks.io/total-oscp-guide/content
@@ -2029,9 +2029,7 @@ Refer to PDF.
     
 ## Privilege Escalation
 
-### Information Gathering
-#### Manual Enumeration
-****Windows****
+### Windows Privilege Escalation
 - `systeminfo` to gather basic information about the system
 - `whoami` displays the username the shell is running as (`whoami /priv` to check the current user's permissions)
 - We can pass the discovered username as an argument to `net user` (e.g. `net user student`)
@@ -2042,37 +2040,9 @@ Refer to PDF.
 systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type"
 ```
 - Running Processes and Services: `tasklist /SVC`, `wmic service get name,displayname,pathname,startmode |findstr /i "auto" |findstr /i /v "c:\windows"`
-**Note:** When a service is created whose executable path contains spaces and isn't enclosed within quotes, leads to a vulnerability known as Unquoted Service Path which allows a user to gain SYSTEM privileges
-- Permissions: `icacls "<directory>"`
-**Note:** A quick Google search for "elevate privileges SeImpersonate" allows us to discover an exploit with the name of "Juicy Potato". 
 
-https://medium.com/r3d-buck3t/impersonating-privileges-with-juicy-potato-e5896b20d505
-
-The first required flag `-t` is the "Process creation mode". The documentation states that we need `CreateProcessWithToken` if we have the `SeImpersonate` privilege, which we do. To direct Juicy Potato to use `CreateProcessWithToken`, we will pass the `t` value.
-
-Next, the `-p` flag specifies the program we are trying to run. In this case, we can use the same backdoored `whoami.exe` binary that we used previously.
-
-Finally, Juicy Potato allows us to specify an arbitrary port for the COM server to listen on with the `-l` flag. 
-
-Potatoes:
-`SeImpersonate` or `SeAssignPrimaryToken` privileges.
-https://jlajara.gitlab.io/Potatoes_Windows_Privesc
-https://github.com/ohpe/juicy-potato
-Check privileges with `whoami /priv`
-https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/juicypotato
-https://github.com/ohpe/juicy-potato/releases
-
-**JuicyPotato doesn't work** on Windows Server 2019 and Windows 10 build 1809 onwards. However, can try PrintSpoofer, RoguePotato, SharpEfsPotato
-
-PrintSpoofer:
-https://github.com/itm4n/PrintSpoofer
-`wget https://github.com/dievus/printspoofer/raw/master/PrintSpoofer.exe`
-### Linux Privilege Escalation
-- Insecure file permissions
-    - Cron job
-        - Find out which cron job is run by root, and amend the script using `echo '<command>' > <cronfile>`
-    - `/etc/passwd`
-
+  **Note:** When a service is created whose executable path contains spaces and isn't enclosed within quotes, leads to a vulnerability known as Unquoted Service Path which allows a user to gain SYSTEM privileges
+- Permissions: `icacls "<directory>"`, and `whoami /priv`
 - Networking Interfaces: `ipconfig /all`
 - Routing Tables: `route print`
 - Active Connections: `netstat -ano`, `netstat -tulnp`
@@ -2121,14 +2091,45 @@ If this setting is enabled, we could craft an MSI file and run it to elevate our
 - Kernel Vulnerabilities
 - Refer to PDF
 
+
+**Note:** A quick Google search for "elevate privileges SeImpersonate" allows us to discover an exploit with the name of "Juicy Potato". 
+
+https://medium.com/r3d-buck3t/impersonating-privileges-with-juicy-potato-e5896b20d505
+
+The first required flag `-t` is the "Process creation mode". The documentation states that we need `CreateProcessWithToken` if we have the `SeImpersonate` privilege, which we do. To direct Juicy Potato to use `CreateProcessWithToken`, we will pass the `t` value.
+
+Next, the `-p` flag specifies the program we are trying to run. In this case, we can use the same backdoored `whoami.exe` binary that we used previously.
+
+Finally, Juicy Potato allows us to specify an arbitrary port for the COM server to listen on with the `-l` flag. 
+
+Potatoes:
+`SeImpersonate` or `SeAssignPrimaryToken` privileges.
+https://jlajara.gitlab.io/Potatoes_Windows_Privesc
+https://github.com/ohpe/juicy-potato
+Check privileges with `whoami /priv`
+https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/juicypotato
+https://github.com/ohpe/juicy-potato/releases
+
+**JuicyPotato doesn't work** on Windows Server 2019 and Windows 10 build 1809 onwards. However, can try PrintSpoofer, RoguePotato, SharpEfsPotato
+
+PrintSpoofer:
+https://github.com/itm4n/PrintSpoofer
+
+`wget https://github.com/dievus/printspoofer/raw/master/PrintSpoofer.exe`
+
 #### Additional Tools/Automated Elevation Checks (Windows)
 - `windows-privesc-check2.exe --dump`
 - https://github.com/itm4n/PrivescCheck
 - https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS
 - https://github.com/carlospolop/PEASS-ng/releases/tag/20230413-7f846812
 	
-**Linux**
+### Linux Privilege Escalation
+
 https://github.com/Tib3rius/Pentest-Cheatsheets/blob/master/privilege-escalation/linux/linux-examples.rst
+- Insecure file permissions
+    - Cron job
+        - Find out which cron job is run by root, and amend the script using `echo '<command>' > <cronfile>`
+    - `/etc/passwd`
 - Use `id` to gather user context information (e.g. what groups they are a part of)
 - `cat /etc/passwd` to enumerate users
     - `www-data` indicates a web server is likely installed
