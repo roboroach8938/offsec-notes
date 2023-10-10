@@ -2176,6 +2176,7 @@ uname -a
 - Device Drivers and Kernel Modules: `lsmod`, and `/sbin/modinfo XX` to find out more about the specific module
 - Binaries that AutoElevate: Search for SUID files: `find / -perm -u=s -type f 2>/dev/null` (Normally, when running an executable, it inherits the permissions of the user that runs it. However, if the SUID permissions are set, the binary will run with the permissions of the file owner. This means that if a binary has the SUID bit set and the file is owned by root, any local user will be able to execute that binary with elevated privileges.)
     - You can check how to exploit the binary in Google/GTFOBins
+    - You can use `suid3num.py` to do a quick summary (https://github.com/Anon-Exploiter/SUID3NUM/tree/master) Just don't use `-e` for OSCP.
     - If `/bin/cp` has SUID, can use to make a new user in `/etc/passwd` 		(https://www.hackingarticles.in/linux-for-pentester-cp-privilege-escalation/)
     - `ls -al /usr/bin/<BINARY> ` to check on permissions of the binary 
     - When in doubt, if `pkexec` has SUID binary set, can probably use `PwnKit` (https://github.com/ly4k/PwnKit), or if you have user authentication, you can escalate
